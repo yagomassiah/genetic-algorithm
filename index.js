@@ -2,14 +2,14 @@ const express = require('express');
 const test = require('./services/testServices');
 const app = express();
 const { Individuo } = require('./services/individuo');
-
+const geneticMethods = require('./services/methods');
 var a = new Individuo(20);
 a.calculaGenotipo();
 a.fitnessCalc();
 //a.fitnessCalc();
 console.log(a);
 var populacao = [];
-var arrr = Array.from({ length: 20 }, () => Math.floor(Math.random() * 31));
+var arrr = Array.from({ length: 4 }, () => Math.floor(Math.random() * 31));
 console.log(arrr);
 
 arrr.forEach(async (element) => {
@@ -31,12 +31,12 @@ console.log(populacao);
 
 
 
-app.get('/', async (req, res) => {
-    var ret = await test.funcAnotherTest();
+app.get('/apigenetica/', async (req, res) => {
+    //var ret = await test.funcAnotherTest();
     var a = new Individuo(8, 3);
     console.log(a.genotipo);
-
-    res.send(populacao);
+    
+    res.send(geneticMethods.torneio(populacao, 4, 2));
 
 
 });

@@ -10,7 +10,7 @@ class Individuo {
     }
 
     calculaGenotipo() {
-        if(this.fenotipo > 64)
+        if(this.fenotipo > 31)
             return false;
         if(this.fenotipo == 0)
             {
@@ -41,7 +41,7 @@ class Individuo {
         return arr;
     }
 
-    async fitnessCalc(){
+    fitnessCalc(){
          this.fitness = this.fenotipo/ 31;
         return this.fitness;
 
