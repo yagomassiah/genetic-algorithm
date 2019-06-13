@@ -4,6 +4,14 @@ const app = express();
 const { Individuo } = require('./services/individuo');
 const geneticMethods = require('./services/methods');
 var a = new Individuo(20);
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+  });
+
+
+
 a.calculaGenotipo();
 a.fitnessCalc();
 //a.fitnessCalc();
