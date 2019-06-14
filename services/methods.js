@@ -91,5 +91,22 @@ module.exports = {
 
 
         return false;
+    },
+
+    selecionaPares(individuos){
+        var naoPareados = individuos;
+        var indiceSorteado = Math.floor(Math.random()*(naoPareados.length -1));
+        var selecionados = [];
+        var k = 0;
+        while(naoPareados.length > 0 ){
+            selecionados[k].push(naoPareados[indiceSorteado]);
+            naoPareados.splice(indiceSorteado,1);
+            indiceSorteado = Math.floor(Math.random()*(naoPareados.length -1));
+            selecionados[k].push(individuos[indiceSorteado]);
+            individuos.splice(indiceSorteado, 1);
+
+            k++;
+        }
+
     }
 }
