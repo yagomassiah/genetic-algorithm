@@ -2,7 +2,7 @@
 
 class Individuo {
     constructor(valor) {
-        this.fenotipo = valor;
+        this.fenotipo = parseInt(valor);
         this.genotipo = false;
         this.fitness = false;
         //this.fitness = Individuo.fitnessCalc()
@@ -43,7 +43,9 @@ class Individuo {
             if (divisao == 1) {
 
                 arr.unshift(1);
+
             }
+           
         }
 
         if (arr.length < this.nBits) {

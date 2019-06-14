@@ -4,7 +4,7 @@ const app = express();
 const { Individuo } = require('./services/individuo');
 const geneticMethods = require('./services/methods');
 const helpers = require('./helpers/helpers');
-var a = new Individuo(20);
+
 app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -13,8 +13,7 @@ app.use(function (req, res, next) {
 
 
 
-a.calculaGenotipo();
-a.fitnessCalc();
+
 //a.fitnessCalc();
 /* console.log(a);
 var populacao = [];
@@ -71,17 +70,21 @@ app.get('/teste/', async (req, res) => {
 
 app.get('/testesoma/', async (req, res) => {
     //var ret = await test.funcAnotherTest();
-    var a = new Individuo(3);
+  /*   var a = new Individuo(req.query.a);
     a.fitnessCalc();
     a.calculaGenotipo();
+ */
 
-    var calculado = helpers.calculaFenotipo(a.nBits, a.genotipo);
-    var ret = {
+    
+    var calculado = helpers.calculaFenotipo(5, [1,1,1,1,1]);
+    /* var ret = {
         individuo: a,
         calculado: calculado
-    };
-
-    res.send(ret);
+    }; */
+    var obj = {
+        calculado:calculado
+    }
+    res.send(obj);
 
 
 });
@@ -107,6 +110,7 @@ app.get('/geneticalgorithm/', async (req, res) => {
         return a.fitness - b.fitness
     });
 
+    var populacaoInicial = populacao;
     // -------------------------------------------------------
 
     populacao = populacao.sort(function (a, b) {
@@ -114,7 +118,7 @@ app.get('/geneticalgorithm/', async (req, res) => {
     });
 
 
-    for (var i = 0; i < 90; i++) {
+    for (var i = 0; i < 10; i++) {
         populacao = populacao.sort(function (a, b) {
             return a.fitness - b.fitness
         });
@@ -132,7 +136,7 @@ app.get('/geneticalgorithm/', async (req, res) => {
         });
         var mutados = [];
         selecionados.forEach(element => {
-            mutados.push(geneticMethods.mutation(element, 0.955));
+            mutados.push(geneticMethods.mutation(element, 0.89));
         });
 
         mutados.forEach(element => {
@@ -145,13 +149,19 @@ app.get('/geneticalgorithm/', async (req, res) => {
 
         if(mutados[0].fitness < elite.fitness){
             mutados[mutados.length-1] = elite;
+            mutados[mutados.length-1].calculaGenotipo();
+            mutados[mutados.length-1].fitnessCalc();
         }
 
         populacao = mutados;
         
     }
-
-    res.send(populacao);
+    var ret = {
+        inicio : populacaoInicial,
+        resultados: populacao,
+        
+    }
+    res.send(ret);
 
 
 });

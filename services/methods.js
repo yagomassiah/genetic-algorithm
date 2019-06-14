@@ -45,7 +45,7 @@ module.exports = {
         // sorteio = 0.8;
         if (sorteio >= chanceDeCross) {
 
-            var tamanho = par[0].genotipo.length;
+            var tamanho = par[0].genotipo.length-1;
             var indice = Math.floor(Math.random() * tamanho);
             console.log(indice);
             // var indice = 4;
@@ -125,9 +125,10 @@ module.exports = {
                 }
             }
         }
-        var fenotipo = helpers.calculaFenotipo(individuo.nBits,newGenotipo);
+        var fenotipo = helpers.calculaFenotipo(individuo.nBits, newGenotipo);
         var individuoMutado = new Individuo(fenotipo);
         individuoMutado.calculaGenotipo();
+        
 
         return individuoMutado;
     }
