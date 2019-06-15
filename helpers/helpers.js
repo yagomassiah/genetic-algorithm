@@ -1,3 +1,4 @@
+const { Individuo } = require('../services/individuo');
 module.exports = {
 
     calculaFenotipo(Nbits, genotipo) {
@@ -13,6 +14,13 @@ module.exports = {
         }
         return soma;
     
+    },
+
+    clone(indivi){
+        var copy = new Individuo(indivi.fenotipo);
+        copy.calculaGenotipo();
+      //  copy.fitnessCalc();
+        return copy;
     }
 
 }

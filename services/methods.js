@@ -91,7 +91,6 @@ module.exports = {
         }
 
 
-        return false;
     },
 
     selecionaPares(individuos) {
