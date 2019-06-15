@@ -5,9 +5,6 @@ class Individuo {
         this.fenotipo = parseInt(valor);
         this.genotipo = false;
         this.fitness = false;
-        //this.fitnessGA = false;
-        //this.fitness = Individuo.fitnessCalc()
-        //  this.fitness =  this.fitnessCalc();
         this.nBits = 8;
     
     }
@@ -40,7 +37,7 @@ class Individuo {
         while (divisao != 1) {
             arr.unshift(divisao % 2);
             divisao = parseInt(divisao / 2);
-            console.log(divisao);
+            
             if (divisao == 1) {
 
                 arr.unshift(1);

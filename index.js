@@ -176,7 +176,7 @@ app.get('/geneticalgorithm/', async (req, res) => {
 app.post('/algoritmogenetico/', async (req, res) => {
     //var ret = await test.funcAnotherTest();
 
-
+    var t0 = new Date().getTime();
 
     //var ret = req.body;
     var individuo = new Individuo(57);
@@ -259,10 +259,14 @@ app.post('/algoritmogenetico/', async (req, res) => {
     var ret = {
         resultados: resultadosFinais
     };
+    var t1 = new Date().getTime();
+    console.log("Done! Feito em" + (t0-t1)/1000 + " segundos" );
     res.send(ret);
 
 
 });
+
+
 
 app.get('/testamutacao/', async (req, res) => {
     //var ret = await test.funcAnotherTest();

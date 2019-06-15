@@ -46,13 +46,10 @@ module.exports = {
         if (sorteio >= chanceDeCross) {
 
             var tamanho = par[0].genotipo.length-1;
+            console.log("Tamanho: "+ tamanho);
             var indice = Math.floor(Math.random() * tamanho);
-            console.log(indice);
-            // var indice = 4;
-            /* var filho1 = par[0].genotipo.slice(0,indice);
-            
-            filho1.concat(par[1].genotipo.slice(indice, tamanho+1));
- */
+            console.log("indice: " + indice);
+      
 
             var filho1 = [];
             for (var i = 0; i < (indice); i++) {
