@@ -221,13 +221,13 @@ app.post('/algoritmogenetico/', async (req, res) => {
             var par;
             selecionados = [];
             pares.forEach(element => {
-                par = geneticMethods.crossover(element, 0.80);
+                par = geneticMethods.crossover(element, 0.30);
                 selecionados.push(par[0]);
                 selecionados.push(par[1]);
             });
             var mutados = [];
             selecionados.forEach(element => {
-                mutados.push(geneticMethods.mutation(element, 0.70));
+                mutados.push(geneticMethods.mutation(element, 0.95));
             });
 
             mutados.forEach(element => {
