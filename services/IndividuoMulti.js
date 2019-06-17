@@ -1,71 +1,91 @@
 
 
 class IndividuoMulti {
-    constructor(valor, dimensoes) {
-        this.fenotipo = parseInt(valor);
-        this.genotipo = false;
+    constructor(valor) {
+        this.fenotipo = valor;
+        this.genotipo = [];
         this.fitness = false;
         this.nBits = 8;
-    
+        this.dimensoes = this.fenotipo.length;
     }
 
     calculaGenotipo() {
-        
-        var divisao = this.fenotipo;
-        var arr = [];
 
-        if (this.fenotipo == 0) {
-            this.genotipo = [];
-            while (this.genotipo.length < this.nBits) {
-                this.genotipo.unshift(0);
-            }
+        this.fenotipo.forEach(element => {
 
-            return this.genotipo;
-        }
-       
-        if (divisao == 1) {
-            this.genotipo = [];
-            this.genotipo.unshift(1);
-            while (this.genotipo.length < this.nBits) {
-                this.genotipo.unshift(0);
-            }
-            return this.genotipo;
-        }
-        while (divisao != 1) {
-            arr.unshift(divisao % 2);
-            divisao = parseInt(divisao / 2);
-            
-            if (divisao == 1) {
 
+            var divisao = element;
+            var arr = [];
+
+            if (divisao == 0) {
+                arr = [];
+                while (arr.length < this.nBits) {
+                    arr.unshift(0);
+                }
+
+            } else if (divisao == 1) {
+                arr = [];
                 arr.unshift(1);
+                while (arr.length < this.nBits) {
+                    arr.unshift(0);
+                }
 
+            } else {
+                while (divisao != 1) {
+                    arr.unshift(divisao % 2);
+                    divisao = parseInt(divisao / 2);
+                    if (divisao == 1) {
+                        arr.unshift(1);
+                    }
+
+                }
+
+                if (arr.length < this.nBits) {
+                    while (arr.length < this.nBits)
+                        arr.unshift(0);
+                }
             }
-           
-        }
+            this.genotipo.push(arr);
+        });
 
-        if (arr.length < this.nBits) {
-            while (arr.length < this.nBits)
-                arr.unshift(0);
-        }
-       
-        this.genotipo = arr;
-        return arr;
+        return this.genotipo;
     }
 
- 
-    fitnessCalc(dataset){
+
+    kernelMulti(arr) {
         var soma = 0;
+        arr.forEach(element => {
+            soma += Math.pow(element, 2);
+        });
+        soma = (soma * (-0.5));
+        var elevado = (-(this.dimensoes)/2);
+        soma = Math.pow(Math.PI, elevado) ;
+        soma = soma *Math.exp(soma);
+
+        return soma;
+    }
+    fitnessCalc(dataset) {
+        //var soma = 0;
         var h = 0.5;
-        
-        for (let i = 0; i < dataset.int.length; i++)
-        {
-            let x = (this.fenotipo - dataset.int[i])/h;
-      
-            soma += (1/(Math.sqrt(2*Math.PI)))*Math.exp(-Math.pow(x,2)/2);
+        var aux = [];
+        var Xi= [];
+        var cont = 0;
+
+        for (let i = 0; i < dataset[0].length; i++) {
+            for (let j = 0; j < this.dimensoes; j++) {
+                Xi.push(dataset[j][i]);
+            }
+            for (let j = 0; j < this.dimensoes; j++) {
+                aux.push((this.fenotipo[j] - Xi[j]) / h);
+            }
+            cont += this.kernelMulti(aux);
+            Xi = [];
+            aux= [];
         }
-        this.fitness = soma / (dataset.int.length * h)
+
+        this.fitness = cont / dataset[0].length * Math.pow(h, this.dimensoes);
     }
 
 }
 
-module.exports = { IndividuoMulti};
+module.exports = { IndividuoMulti };

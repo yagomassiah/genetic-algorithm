@@ -1,6 +1,7 @@
 
 const helpers = require('../helpers/helpers');
 const { Individuo } = require('./individuo');
+
 module.exports = {
 
     fitness(a) {
