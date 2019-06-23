@@ -220,7 +220,7 @@ app.post('/gaMulti/', async (req, res) => {
         //    var a; 
         populacao = [];
         for (let i = 0; i < 6; i++) {
-            arr = Array.from({ length: 3 }, () => Math.floor(Math.random() * 255));
+            arr = Array.from({ length: 3 }, () => Math.floor(Math.random() * 65535));
             populacao.push(new IndividuoMulti(arr));
             populacao[i].calculaGenotipo();
             populacao[i].fitnessCalc(dataset);
@@ -273,7 +273,7 @@ app.post('/gaMulti/', async (req, res) => {
     }
     var t1 = new Date().getTime();
     console.log("Done! Feito em " + (t1 - t0) / 1000 + " segundos");
-    res.send(populacao);
+    res.send(resultadosFinais);
 
 });
 

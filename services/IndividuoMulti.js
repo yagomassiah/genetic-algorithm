@@ -5,7 +5,7 @@ class IndividuoMulti {
         this.fenotipo = valor;
         this.genotipo = [];
         this.fitness = false;
-        this.nBits = 8;
+        this.nBits = 16;
         this.dimensoes = this.fenotipo.length;
     }
 
@@ -59,9 +59,11 @@ class IndividuoMulti {
         });
         soma = (soma * (-0.5));
         var elevado = (-(this.dimensoes)/2);
-        soma = Math.pow(Math.PI, elevado) ;
-        soma = soma *Math.exp(soma);
-
+        var trecho = Math.pow(2*Math.PI, elevado) ;
+        var exponencial = Math.exp(soma);
+        soma = trecho *(Math.exp(soma));
+        if(soma > 0)
+            console.log(soma);
         return soma;
     }
     fitnessCalc(dataset) {
