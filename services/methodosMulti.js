@@ -29,29 +29,37 @@ module.exports = {
     },
 
     crossover(par, chanceDeCross) {
+
         var sorteio = Math.random();
         // sorteio = 0.8;
+        // SOLUÇÃO PODE SER PAI
         var pai1 = par[0].genotipo;
         var pai2 = par[1].genotipo;
         var filho1 = [];
         var filho2 = [];
         var z = 0;
+        if(pai1.length >3)
+            console.log(pai1);
         pai1.forEach(element => {
 
             if (sorteio >= chanceDeCross) {
 
                 var tamanho = element.length - 1;
-                console.log("Tamanho: " + tamanho);
+                
                 var indice = Math.floor(Math.random() * tamanho);
-                console.log("indice: " + indice);
+              
 
                 var fenElement = [];
                 for (var i = 0; i < (indice); i++) {
                     fenElement.push(element[i]);
                 }
-                i = indice;
-                for (i; i < element.length; i++) {
-                    fenElement.push(pai2[z][i]);
+                var p = indice;
+                for (p; p < element.length; p++) {
+                    if(typeof pai2[z] == 'undefined')
+                        console.log("demais");
+                    if(typeof pai2[z][p] == 'undefined')
+                        console.log("mais um erro..");
+                    fenElement.push(pai2[z][p]);
                 }
 
 
@@ -60,9 +68,9 @@ module.exports = {
                     fenElement2.push(pai2[z][k]);
                     // fenElement2.push(par[1].genotipo[k]);
                 }
-                k = indice;
-                for (k; k < element.length; k++) {
-                    fenElement2.push(element[k]);
+                var m= indice;
+                for (m; m < element.length; m++) {
+                    fenElement2.push(element[m]);
                 }
 
                 filho1.push(fenElement);
@@ -79,12 +87,19 @@ module.exports = {
 
         var FenotiposFilho1 = [];
         var FenotiposFilho2 = [];
-
+        if (filho1.length != 3)
+            console.log("filho1 mais de 3");
+        if (filho2.length != 3)
+            console.log("filho2 mais de 3");
         filho1.forEach(element => {
+            if (par[0].nBits != element.length)
+                console.log("aqui");
             FenotiposFilho1.push(helpers.calculaFenotipo(par[0].nBits, element));
         });
 
         filho2.forEach(element => {
+            if (par[0].nBits != element.length)
+                console.log("aqui");
             FenotiposFilho2.push(helpers.calculaFenotipo(par[0].nBits, element));
         });
         var Individuo1 = new IndividuoMulti(FenotiposFilho1);
@@ -93,6 +108,9 @@ module.exports = {
         Individuo2.calculaGenotipo();
 
         return [Individuo1, Individuo2];
+
+
+
 
     },
 

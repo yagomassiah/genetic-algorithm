@@ -22,10 +22,46 @@ module.exports = {
         return copy;
     },
 
+    realToInt(dataset, numero, Nbits) {
+        var rangeVal = Math.pow(2, Nbits) - 1;
+        var bigArray = [];
+        dataset.forEach(element => {
+            bigArray = bigArray.concat(element);
+        });
+        var Max = Math.max(...bigArray);
+        var Min = Math.min(...bigArray);
+        var inc = (Max - Min) / rangeVal;
+
+        for (var i = 0; i < rangeVal; i++) {
+            if (numero <= (Min + (i * inc)))
+                return i - 1;
+
+        }
+
+        return false;
+
+    },
+
+    intToReal(dataset, numero, Nbits) {
+        var x = numero;
+        var rangeVal = Math.pow(2, Nbits) - 1;
+        var bigArray = [];
+        dataset.datasetReal.forEach(element => {
+            bigArray = bigArray.concat(element);
+        });
+        var Max = Math.max(...bigArray);
+        var Min = Math.min(...bigArray);
+        var inc = ((Max - Min) / rangeVal);
+        var mult = x * inc;
+        x = Min + (x*inc);
+
+        return x;
+    },
+
     kernelMulti(x) {
         var soma = 0;
         for (var i = 0; i < dimensoes; i++) {
-            
+
         }
     }
 
