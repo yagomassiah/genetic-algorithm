@@ -17,7 +17,7 @@ module.exports = {
 
     clone(indivi) {
         var copy = new Individuo(indivi.fenotipo);
-        copy.calculaGenotipo();
+        copy.calculaGenotipo(dataset);
         //  copy.fitnessCalc();
         return copy;
     },
@@ -52,9 +52,7 @@ module.exports = {
         var Max = Math.max(...bigArray);
         var Min = Math.min(...bigArray);
         var inc = ((Max - Min) / rangeVal);
-        var mult = x * inc;
         x = Min + (x*inc);
-
         return x;
     },
 

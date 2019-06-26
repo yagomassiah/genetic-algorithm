@@ -28,7 +28,7 @@ module.exports = {
 
     },
 
-    crossover(par, chanceDeCross) {
+    crossover(par, chanceDeCross, dataset) {
 
         var sorteio = Math.random();
         // sorteio = 0.8;
@@ -38,8 +38,6 @@ module.exports = {
         var filho1 = [];
         var filho2 = [];
         var z = 0;
-        if(pai1.length >3)
-            console.log(pai1);
         pai1.forEach(element => {
 
             if (sorteio >= chanceDeCross) {
@@ -87,10 +85,6 @@ module.exports = {
 
         var FenotiposFilho1 = [];
         var FenotiposFilho2 = [];
-        if (filho1.length != 3)
-            console.log("filho1 mais de 3");
-        if (filho2.length != 3)
-            console.log("filho2 mais de 3");
         filho1.forEach(element => {
             if (par[0].nBits != element.length)
                 console.log("aqui");
@@ -102,9 +96,9 @@ module.exports = {
                 console.log("aqui");
             FenotiposFilho2.push(helpers.calculaFenotipo(par[0].nBits, element));
         });
-        var Individuo1 = new IndividuoMulti(FenotiposFilho1);
+        var Individuo1 = new IndividuoMulti(FenotiposFilho1, par[0].nBits, dataset);
         Individuo1.calculaGenotipo();
-        var Individuo2 = new IndividuoMulti(FenotiposFilho2);
+        var Individuo2 = new IndividuoMulti(FenotiposFilho2, par[0].nBits, dataset);
         Individuo2.calculaGenotipo();
 
         return [Individuo1, Individuo2];
@@ -132,7 +126,7 @@ module.exports = {
         return selecionados;
     },
 
-    mutation(individuo, rateOfMutation) {
+    mutation(individuo, rateOfMutation, dataset) {
         var sorteio;
         var newGenotipo = individuo.genotipo;
         var newGen = [];
@@ -156,7 +150,7 @@ module.exports = {
         newGenotipo.forEach(element => {
             Fenotipos.push(helpers.calculaFenotipo(individuo.nBits, element));
         });
-        var individuoMutado = new IndividuoMulti(Fenotipos);
+        var individuoMutado = new IndividuoMulti(Fenotipos, individuo.nBits, dataset);
         individuoMutado.calculaGenotipo();
 
 

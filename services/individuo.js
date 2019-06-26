@@ -43,7 +43,6 @@ class Individuo {
                 arr.unshift(1);
 
             }
-           
         }
 
         if (arr.length < this.nBits) {

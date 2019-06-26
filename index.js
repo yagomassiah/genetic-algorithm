@@ -7,6 +7,7 @@ const { sqrt } = require('mathjs');
 const geneticMethods = require('./services/methods');
 const multiGeneticMethods = require('./services/methodosMulti');
 const helpers = require('./helpers/helpers');
+const bits = 16;
 
 
 app.use(express.json());
@@ -214,6 +215,8 @@ app.post('/gaMulti/', async (req, res) => {
     var tparcial;
     var dataset = req.body;
 
+    console.log(dataset.datasetReal.length);
+
     var resultadosFinais = [];
     //console.log(req);
     var populacao = [];
@@ -221,10 +224,8 @@ app.post('/gaMulti/', async (req, res) => {
         //    var a; 
         populacao = [];
         for (let i = 0; i < 6; i++) {
-            arr = Array.from({ length: 3 }, () => Math.floor(Math.random() * 1023));
-            if (arr.length > 5)
-                console.log("aqui");
-            populacao.push(new IndividuoMulti(arr));
+            arr = Array.from({ length: dataset.datasetReal.length }, () => Math.floor(Math.random() * (Math.pow(2, bits)-1) ));
+            populacao.push(new IndividuoMulti(arr, bits, dataset));
             populacao[i].calculaGenotipo();
             populacao[i].fitnessCalc(dataset);
         }
@@ -234,7 +235,10 @@ app.post('/gaMulti/', async (req, res) => {
             populacao = populacao.sort(function (a, b) {
                 return a.fitness - b.fitness
             });
-            var elite = helpers.clone( populacao[populacao.length - 1]);
+            let copy = new IndividuoMulti(populacao[populacao.length - 1].fenotipo, bits, dataset);
+            copy.calculaGenotipo();
+            var elite = copy;
+            copy = null;
 
 
             var selecionados = multiGeneticMethods.torneio(populacao, 6, 2);
@@ -248,13 +252,13 @@ app.post('/gaMulti/', async (req, res) => {
             });
             selecionados = [];
             pares.forEach(element => {
-                par = multiGeneticMethods.crossover(element, 0.30);
+                par = multiGeneticMethods.crossover(element, 0.30, dataset);
                 selecionados.push(par[0]);
                 selecionados.push(par[1]);
             });
             var mutados = [];
             selecionados.forEach(element => {
-                mutados.push(multiGeneticMethods.mutation(element, 0.95));
+                mutados.push(multiGeneticMethods.mutation(element, 0.95, dataset));
             });
 
             mutados.forEach(element => {
@@ -266,7 +270,9 @@ app.post('/gaMulti/', async (req, res) => {
             });
 
             if (mutados[0].fitness < elite.fitness) {
-                mutados[mutados.length - 1] = helpers.clone( elite);
+                let copy = new IndividuoMulti(elite.fenotipo, bits, dataset);
+                copy.calculaGenotipo();
+                mutados[mutados.length - 1] = copy;
                 mutados[mutados.length - 1].calculaGenotipo();
                 mutados[mutados.length - 1].fitnessCalc(dataset);
             }

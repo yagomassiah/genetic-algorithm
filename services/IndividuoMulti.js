@@ -1,12 +1,17 @@
 const helpers = require('../helpers/helpers');
 
 class IndividuoMulti {
-    constructor(valor) {
+    constructor(valor, bits, dataset) {
         this.fenotipo = valor;
         this.genotipo = [];
         this.fitness = false;
-        this.nBits = 10;
+        this.nBits = bits;
         this.dimensoes = this.fenotipo.length;
+        this.fenotipoReal = [];
+        for (let i = 0; i < this.fenotipo.length; i++)
+        {
+            this.fenotipoReal[i] = helpers.intToReal(dataset, valor[i], bits);
+        }
     }
 
     calculaGenotipo() {
@@ -46,13 +51,13 @@ class IndividuoMulti {
                 }
             }
             this.genotipo.push(arr);
-        });
 
+        });
         return this.genotipo;
     }
 
 
-    kernelMulti(arr, dataset) {
+    kernelMulti(arr) {
         var soma = 0;
         arr.forEach(element => {
             soma += Math.pow(element, 2);
@@ -61,7 +66,6 @@ class IndividuoMulti {
         soma = (soma * (-0.5));
         var elevado = (-(this.dimensoes)/2);
         var trecho = Math.pow(2*Math.PI, elevado) ;
-        var exponencial = Math.exp(soma);
         soma = trecho *(Math.exp(soma));
         return soma;
     }
@@ -71,21 +75,19 @@ class IndividuoMulti {
         var aux = [];
         var Xi= [];
         var cont = 0;
-        for (let i = 0; i < dataset.datasetInt[0].length; i++) {
+        for (let i = 0; i < dataset.datasetReal[0].length; i++) {
             for (let j = 0; j < this.dimensoes; j++) {
-                if(typeof dataset.datasetReal[j] == 'undefined')
-                    console.log(typeof dataset.datasetReal[j])
                 Xi.push(dataset.datasetReal[j][i]);
             }
             for (let j = 0; j < this.dimensoes; j++) {
-                aux.push((helpers.intToReal(dataset, this.fenotipo[j], this.nBits) - Xi[j]) / h);
+                aux.push((this.fenotipoReal[j] - Xi[j]) / h);
             }
-            cont += this.kernelMulti(aux, dataset);
+            cont += this.kernelMulti(aux);
             Xi = [];
             aux= [];
         }
 
-        this.fitness = cont / dataset.datasetInt[0].length * Math.pow(h, this.dimensoes);
+        this.fitness = cont / dataset.datasetReal[0].length * Math.pow(h, this.dimensoes);
     }
 
 }
