@@ -77,19 +77,67 @@ module.exports = {
     let celulasDisponiveis = [];
 
     for (let i = 0; i < linhas; i++) {
-      console.log("i: " + i);
       for (let j = 0; j < colunas; j++) {
         if (matriz[i][j] != 1 && matriz[i][j] != 2)
           celulasDisponiveis.push([i, j]);
       }
     }
-    console.log(celulasDisponiveis);
-    console.log(matrizLab);
+    /*   console.log(celulasDisponiveis);
+    console.log(matrizLab); */
+    this.printLab(matrizLab);
   },
   geradorDeIndividuo(matriz) {
     /*  let linhas = matriz.length;
     let colunas = matriz[0].length; */
-    let celulasDisponiveis = this.celulasDisponiveis(matrizLab);
+    let continua = true;
+    let posicaoAtual = [1, 1];
+    this.printLab(matrizLab);
+    let celulasDisponiveis = this.checaVizinhanca(posicaoAtual, matrizLab);
+    /*  do {} while (continua);
+     */
     return null;
+  },
+
+  printLab(matriz) {
+    for (let i = 0; i < matriz.length; i++) {
+      let linha = "";
+      for (let j = 0; j < matriz[0].length; j++) {
+        linha = linha + "" + matriz[i][j];
+      }
+      console.log(linha);
+    }
+  },
+  checaVizinhanca(posicao, matriz) {
+    let linha = posicao[0];
+    let coluna = posicao[1];
+    let disponiveis = [];
+    if (matriz[linha-1]) {
+      if (matriz[linha-1][coluna] != 1) {
+        console.log("Acima disponivel");
+        disponiveis.push([linha-1, coluna]);
+      }
+    }
+    if (matriz[linha+1]) {
+      if (matriz[linha+1][coluna] != 1) {
+        console.log("Abaixo disponivel");
+        disponiveis.push([linha+1, coluna]);
+      }
+    }
+    if (typeof matriz[linha][coluna-1] != 'undefined') {
+      if (matriz[linha][coluna - 1] != 1) {
+        console.log("Esquerda disponivel");
+        console.log(matriz[linha][coluna - 1]);
+        disponiveis.push([linha, coluna - 1]);
+      }
+    }
+    
+    if ( typeof matriz[linha][coluna+1] != 'undefined' ) {
+      if (matriz[linha][coluna + 1] != 1) {
+        console.log("Direita disponivel");
+        disponiveis.push([linha, coluna + 1]);
+      }
+    }
+
+    console.log(disponiveis);
   }
 };

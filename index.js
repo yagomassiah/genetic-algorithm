@@ -9,7 +9,11 @@ const geneticMethods = require('./services/methods');
 const multiGeneticMethods = require('./services/methodosMulti');
 const helpers = require('./helpers/helpers');
 const bits = 16;
-
+const matrizLab = [
+    [0, 0, 1, 1],
+    [1, 0, 1, 0],
+    [1, 0, 0, 3]
+  ];
 
 app.use(express.json());
 app.use(function (req, res, next) {
@@ -103,7 +107,7 @@ app.get('/geneticalgorithm/', async (req, res) => {
 });
 
 app.get('/teste', async (req, res) =>{
-    helpers.geradorDeIndividuo();
+    helpers.geradorDeIndividuo(matrizLab);
     res.send("yea boi");
 })
 app.get('/galabirinto/', async (req, res) => {
