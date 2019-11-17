@@ -1,7 +1,7 @@
 
 const helpers = require('../helpers/helpers');
 const { Individuo } = require('./individuo');
-
+const { generalIndividual } = require('./generalIndividual');
 module.exports = {
 
     fitness(a) {
@@ -46,11 +46,11 @@ module.exports = {
         // sorteio = 0.8;
         if (sorteio >= chanceDeCross) {
 
-            var tamanho = par[0].genotipo.length-1;
-            console.log("Tamanho: "+ tamanho);
+            var tamanho = par[0].genotipo.length - 1;
+            console.log("Tamanho: " + tamanho);
             var indice = Math.floor(Math.random() * tamanho);
             console.log("indice: " + indice);
-      
+
 
             var filho1 = [];
             for (var i = 0; i < (indice); i++) {
@@ -82,6 +82,60 @@ module.exports = {
                 indice: indice
             }
             var ret = [individuo1, individuo2];
+            return ret;
+
+        } else {
+            return par;
+        }
+
+
+    },
+    crossover2(par, chanceDeCross) {
+        var sorteio = Math.random();
+        // sorteio = 0.8;
+       
+        if (sorteio >= chanceDeCross) {
+
+            var tamanho = par[0].genotipo.length - 1;
+          //  console.log("Tamanho: " + tamanho);
+            if(tamanho > 4)
+                console.log("tamanho maior!")
+            var indice = Math.floor(Math.random() * tamanho);
+           // console.log("indice: " + indice);
+
+
+            var filho1 = [];
+            for (var i = 0; i < (indice); i++) {
+                filho1.push(par[0].genotipo[i]);
+            }
+            i = indice;
+            for (i; i < par[0].genotipo.length; i++) {
+                filho1.push(par[1].genotipo[i]);
+            }
+
+
+            var filho2 = [];
+            for (var k = 0; k < (indice); k++) {
+                filho2.push(par[1].genotipo[k]);
+            }
+            k = indice;
+            for (k; k < par[0].genotipo.length; k++) {
+                filho2.push(par[0].genotipo[k]);
+            }
+
+
+            var individuo1 = new generalIndividual(helpers.calculaFenotipo(par[0].nBits, filho1));
+            var individuo2 = new generalIndividual(helpers.calculaFenotipo(par[0].nBits, filho2));
+           
+            individuo1.calculaGenotipo();
+            individuo2.calculaGenotipo();
+            var obj = {
+                pais: [par[0], par[1]],
+                filhos: [individuo1, individuo2],
+                indice: indice
+            }
+            var ret = [individuo1, individuo2];
+       
             return ret;
 
         } else {
@@ -125,7 +179,27 @@ module.exports = {
         var fenotipo = helpers.calculaFenotipo(individuo.nBits, newGenotipo);
         var individuoMutado = new Individuo(fenotipo);
         individuoMutado.calculaGenotipo();
-        
+
+
+        return individuoMutado;
+    },
+    mutation2(individuo, rateOfMutation) {
+        var sorteio;
+        var newGenotipo = individuo.genotipo;
+        for (var i = 0; i < newGenotipo.length; i++) {
+            sorteio = Math.random();
+            if (sorteio > rateOfMutation) {
+                if (newGenotipo[i] == 1) {
+                    newGenotipo[i] = 0;
+                } else if (newGenotipo[i] == 0) {
+                    newGenotipo[i] = 1;
+                }
+            }
+        }
+        var fenotipo = helpers.calculaFenotipo(individuo.nBits, newGenotipo);
+        var individuoMutado = new generalIndividual(fenotipo);
+        individuoMutado.calculaGenotipo();
+
 
         return individuoMutado;
     }
