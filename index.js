@@ -12,6 +12,8 @@ const bits = 16;
 const matrizLab = [
     [0, 0, 1, 1],
     [1, 0, 1, 0],
+    [1, 0, 0, 0],
+    [1, 0, 1, 0],
     [1, 0, 0, 3]
   ];
 
@@ -107,8 +109,8 @@ app.get('/geneticalgorithm/', async (req, res) => {
 });
 
 app.get('/teste', async (req, res) =>{
-    helpers.geradorDeIndividuo(matrizLab);
-    res.send("yea boi");
+   let response = helpers.geradorDeIndividuo(matrizLab);
+    res.send(response);
 })
 app.get('/galabirinto/', async (req, res) => {
     //var ret = await test.funcAnotherTest();
