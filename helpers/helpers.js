@@ -69,7 +69,7 @@ module.exports = {
 
   kernelMulti(x) {
     var soma = 0;
-    for (var i = 0; i < dimensoes; i++) { }
+    for (var i = 0; i < dimensoes; i++) {}
   },
   celulasDisponiveis(matriz) {
     let colunas = matriz[0].length;
@@ -92,6 +92,9 @@ module.exports = {
     let continua = true;
     let posicaoAtual = [0, 0];
     let fim = [];
+    let genotipo = [];
+    let posicaoFinal = [4, 3];
+    genotipo.push(posicaoAtual);
     matriz[posicaoAtual[0]][posicaoAtual[1]] = 5;
     this.printLab(matriz);
     let celulasDisponiveis = this.checaVizinhanca(posicaoAtual, matriz);
@@ -99,6 +102,26 @@ module.exports = {
       if (celulasDisponiveis.length == 1) {
         matriz[posicaoAtual[0]][posicaoAtual[1]] = 4;
         posicaoAtual = celulasDisponiveis[0];
+        genotipo.push(posicaoAtual);
+        matriz[posicaoAtual[0]][posicaoAtual[1]] = 5;
+        celulasDisponiveis = this.checaVizinhanca(posicaoAtual, matriz);
+        this.printLab(matriz);
+        if (celulasDisponiveis.length == 0) {
+          fim = posicaoAtual;
+          continua = false;
+        }
+        if ((posicaoAtual[0] == posicaoFinal[0])&&(posicaoAtual[1] == posicaoFinal[1] )) {
+          fim = posicaoAtual;
+          continua = false;
+        }
+      } else if (celulasDisponiveis.length > 1) {
+        matriz[posicaoAtual[0]][posicaoAtual[1]] = 4;
+        let indiceSorteado = this.randomInteiro(
+          0,
+          celulasDisponiveis.length - 1
+        );
+        posicaoAtual = celulasDisponiveis[indiceSorteado];
+        genotipo.push(posicaoAtual);
         matriz[posicaoAtual[0]][posicaoAtual[1]] = 5;
         celulasDisponiveis = this.checaVizinhanca(posicaoAtual, matriz);
         this.printLab(matriz);
@@ -107,20 +130,13 @@ module.exports = {
           continua = false;
         }
 
-
-      } else if (celulasDisponiveis.length > 1) {
-        matriz[posicaoAtual[0]][posicaoAtual[1]] = 4;
-        let indiceSorteado = this.randomInteiro(0, celulasDisponiveis.length -1);
-        posicaoAtual = celulasDisponiveis[indiceSorteado];
-        matriz[posicaoAtual[0]][posicaoAtual[1]] = 5;
-        celulasDisponiveis = this.checaVizinhanca(posicaoAtual, matriz);
-        this.printLab(matriz);
-        if (celulasDisponiveis.length == 0) {
+        if (posicaoAtual == posicaoFinal) {
           fim = posicaoAtual;
           continua = false;
         }
       } else if (celulasDisponiveis.length == 0) {
         console.log("wut");
+        continua = false;
       }
     } while (continua);
 
@@ -128,12 +144,11 @@ module.exports = {
   },
 
   randomInteiro(min, max) {
-    return Math.floor(Math.random() * (max - min + 1) ) + min;
+    return Math.floor(Math.random() * (max - min + 1)) + min;
   },
-  preenche(posicao, matriz) {
-
-  },
+  preenche(posicao, matriz) {},
   printLab(matriz) {
+    console.log("-------------------------");
     for (let i = 0; i < matriz.length; i++) {
       let linha = "";
       for (let j = 0; j < matriz[0].length; j++) {
@@ -146,32 +161,31 @@ module.exports = {
     let linha = posicao[0];
     let coluna = posicao[1];
     let disponiveis = [];
-    if (typeof matriz[linha - 1] != 'undefined') {
-      if ((matriz[linha - 1][coluna] == 0) || (matriz[linha - 1][coluna] == 3)) {
+    if (typeof matriz[linha - 1] != "undefined") {
+      if (matriz[linha - 1][coluna] == 0 || matriz[linha - 1][coluna] == 3) {
         console.log("Acima disponivel");
         disponiveis.push([linha - 1, coluna]);
       }
     }
-    if (typeof matriz[linha + 1] != 'undefined') {
-      if ((matriz[linha + 1][coluna] == 0) || (matriz[linha + 1][coluna] == 3)) {
+    if (typeof matriz[linha + 1] != "undefined") {
+      if (matriz[linha + 1][coluna] == 0 || matriz[linha + 1][coluna] == 3) {
         console.log("Abaixo disponivel");
         disponiveis.push([linha + 1, coluna]);
       }
     }
-    if (typeof matriz[linha][coluna - 1] != 'undefined') {
-      if ((matriz[linha][coluna - 1] == 0) || (matriz[linha][coluna - 1] == 3)) {
+    if (typeof matriz[linha][coluna - 1] != "undefined") {
+      if (matriz[linha][coluna - 1] == 0 || matriz[linha][coluna - 1] == 3) {
         console.log("Esquerda disponivel");
         disponiveis.push([linha, coluna - 1]);
       }
     }
 
-    if (typeof matriz[linha][coluna + 1] != 'undefined') {
-      if  ((matriz[linha][coluna + 1] == 0) || (matriz[linha][coluna + 1] == 3)) {
+    if (typeof matriz[linha][coluna + 1] != "undefined") {
+      if (matriz[linha][coluna + 1] == 0 || matriz[linha][coluna + 1] == 3) {
         console.log("Direita disponivel");
         disponiveis.push([linha, coluna + 1]);
       }
     }
-
 
     return disponiveis;
   }
