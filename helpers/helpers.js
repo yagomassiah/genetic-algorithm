@@ -140,6 +140,12 @@ module.exports = {
       }
     } while (continua);
 
+
+    let copiaGenotipo = this.copiaArrays(genotipo);
+    copiaGenotipo[0][0] = 9;
+
+    console.log(genotipo);
+    console.log(copiaGenotipo);
     return matriz;
   },
 
@@ -188,5 +194,19 @@ module.exports = {
     }
 
     return disponiveis;
+  },
+
+  copiaArrays(arr){
+    let novoArray = [];
+    arr.forEach(element => {
+      let elementoInterno = [];
+      element.forEach(element2 => {
+        elementoInterno.push(element2);
+        
+      });
+      novoArray.push(elementoInterno);
+    });
+  
+    return novoArray;
   }
 };
