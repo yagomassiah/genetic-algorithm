@@ -84,19 +84,17 @@ module.exports = {
     }
     /*   console.log(celulasDisponiveis);
     console.log(matrizLab); */
-    this.printLab(matrizLab);
   },
-  geradorDeIndividuo(matriz) {
-    /*  let linhas = matriz.length;
-    let colunas = matriz[0].length; */
+  geradorDeIndividuo(matrizOrigem, posicao) {
     let continua = true;
-    let posicaoAtual = [0, 0];
+    let matriz = this.copiaArrayDuplo(matrizOrigem);
+    let posicaoAtual = this.copiaArraySimples(posicao);
     let fim = [];
     let genotipo = [];
-    let posicaoFinal = [4, 3];
+    let posicaoFinal = [6, 4];
     genotipo.push(posicaoAtual);
     matriz[posicaoAtual[0]][posicaoAtual[1]] = 5;
-    this.printLab(matriz);
+    // this.printLab(matriz);
     let celulasDisponiveis = this.checaVizinhanca(posicaoAtual, matriz);
     do {
       if (celulasDisponiveis.length == 1) {
@@ -105,12 +103,14 @@ module.exports = {
         genotipo.push(posicaoAtual);
         matriz[posicaoAtual[0]][posicaoAtual[1]] = 5;
         celulasDisponiveis = this.checaVizinhanca(posicaoAtual, matriz);
-        this.printLab(matriz);
         if (celulasDisponiveis.length == 0) {
           fim = posicaoAtual;
           continua = false;
         }
-        if ((posicaoAtual[0] == posicaoFinal[0])&&(posicaoAtual[1] == posicaoFinal[1] )) {
+        if (
+          posicaoAtual[0] == posicaoFinal[0] &&
+          posicaoAtual[1] == posicaoFinal[1]
+        ) {
           fim = posicaoAtual;
           continua = false;
         }
@@ -124,7 +124,6 @@ module.exports = {
         genotipo.push(posicaoAtual);
         matriz[posicaoAtual[0]][posicaoAtual[1]] = 5;
         celulasDisponiveis = this.checaVizinhanca(posicaoAtual, matriz);
-        this.printLab(matriz);
         if (celulasDisponiveis.length == 0) {
           fim = posicaoAtual;
           continua = false;
@@ -140,13 +139,8 @@ module.exports = {
       }
     } while (continua);
 
-
-    let copiaGenotipo = this.copiaArrays(genotipo);
-    copiaGenotipo[0][0] = 9;
-
-    console.log(genotipo);
-    console.log(copiaGenotipo);
-    return matriz;
+    this.printLab(matriz);
+    return genotipo;
   },
 
   randomInteiro(min, max) {
@@ -158,8 +152,19 @@ module.exports = {
     for (let i = 0; i < matriz.length; i++) {
       let linha = "";
       for (let j = 0; j < matriz[0].length; j++) {
-        linha = linha + "" + matriz[i][j];
+        if (matriz[i][j] == 1) {
+          linha = linha + "\x1b[31m" + matriz[i][j];
+        } else if (matriz[i][j] == 4) {
+          linha = linha + "\x1b[32m" + matriz[i][j];
+        } else if (matriz[i][j] == 5) {
+          linha = linha + "\x1b[33m" + matriz[i][j];
+        } else if (matriz[i][j] == 0) {
+          linha = linha + "\x1b[37m" + matriz[i][j];
+        } else if (matriz[i][j] == 3) {
+          linha = linha + "\x1b[36m" + matriz[i][j];
+        }
       }
+
       console.log(linha);
     }
   },
@@ -167,20 +172,30 @@ module.exports = {
     let linha = posicao[0];
     let coluna = posicao[1];
     let disponiveis = [];
+    let saida = [];
     if (typeof matriz[linha - 1] != "undefined") {
       if (matriz[linha - 1][coluna] == 0 || matriz[linha - 1][coluna] == 3) {
+        if (matriz[linha - 1][coluna] == 3) {
+          saida.push([linha - 1, coluna]);
+        }
         console.log("Acima disponivel");
         disponiveis.push([linha - 1, coluna]);
       }
     }
     if (typeof matriz[linha + 1] != "undefined") {
       if (matriz[linha + 1][coluna] == 0 || matriz[linha + 1][coluna] == 3) {
+        if (matriz[linha + 1][coluna] == 3) {
+          saida.push([linha + 1, coluna]);
+        }
         console.log("Abaixo disponivel");
         disponiveis.push([linha + 1, coluna]);
       }
     }
     if (typeof matriz[linha][coluna - 1] != "undefined") {
       if (matriz[linha][coluna - 1] == 0 || matriz[linha][coluna - 1] == 3) {
+        if (matriz[linha][coluna - 1] == 3) {
+          saida.push([linha, coluna - 1]);
+        }
         console.log("Esquerda disponivel");
         disponiveis.push([linha, coluna - 1]);
       }
@@ -188,25 +203,35 @@ module.exports = {
 
     if (typeof matriz[linha][coluna + 1] != "undefined") {
       if (matriz[linha][coluna + 1] == 0 || matriz[linha][coluna + 1] == 3) {
+        if (matriz[linha][coluna + 1] == 3) {
+          saida.push([linha, coluna + 1]);
+        }
         console.log("Direita disponivel");
         disponiveis.push([linha, coluna + 1]);
       }
     }
-
-    return disponiveis;
+    if (saida.length > 0) return saida;
+    else return disponiveis;
   },
 
-  copiaArrays(arr){
+  copiaArrayDuplo(arr) {
     let novoArray = [];
     arr.forEach(element => {
       let elementoInterno = [];
       element.forEach(element2 => {
         elementoInterno.push(element2);
-        
       });
       novoArray.push(elementoInterno);
     });
-  
+
+    return novoArray;
+  },
+  copiaArraySimples(arr) {
+    let novoArray = [];
+    arr.forEach(element => {
+      novoArray.push(element);
+    });
+
     return novoArray;
   }
 };

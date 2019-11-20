@@ -1,10 +1,13 @@
+const helpers = require("../helpers/helpers");
 class individuoLabirinto {
   constructor(valor) {
     this.fenotipo = [];
-    this.genotipo = [];
+    this.genotipo = valor;
     this.finaliza = false;
     this.fitness = 0;
     this.nBits = 7;
+
+   
   }
 
   calculaGenotipo() {
@@ -18,4 +21,4 @@ class individuoLabirinto {
   }
 }
 //var a = new Individuo( 2, 3);
-module.exports = { generalIndividual };
+module.exports = { individuoLabirinto };
