@@ -92,6 +92,7 @@ module.exports = {
     let fim = [];
     let genotipo = [];
     let posicaoFinal = [6, 4];
+    let encruzilhadas= [];
     genotipo.push(posicaoAtual);
     matriz[posicaoAtual[0]][posicaoAtual[1]] = 5;
     // this.printLab(matriz);
@@ -101,20 +102,20 @@ module.exports = {
         matriz[posicaoAtual[0]][posicaoAtual[1]] = 4;
         posicaoAtual = celulasDisponiveis[0];
         genotipo.push(posicaoAtual);
-        matriz[posicaoAtual[0]][posicaoAtual[1]] = 5;
-        celulasDisponiveis = this.checaVizinhanca(posicaoAtual, matriz);
-        if (celulasDisponiveis.length == 0) {
+        if (matriz[posicaoAtual[0]][posicaoAtual[1]] == 3) {
           fim = posicaoAtual;
           continua = false;
-        }
-        if (
-          posicaoAtual[0] == posicaoFinal[0] &&
-          posicaoAtual[1] == posicaoFinal[1]
-        ) {
-          fim = posicaoAtual;
-          continua = false;
+          matriz[posicaoAtual[0]][posicaoAtual[1]] = 5;
+        } else {
+          matriz[posicaoAtual[0]][posicaoAtual[1]] = 5;
+          celulasDisponiveis = this.checaVizinhanca(posicaoAtual, matriz);
+          if (celulasDisponiveis.length == 0) {
+            fim = posicaoAtual;
+            continua = false;
+          }
         }
       } else if (celulasDisponiveis.length > 1) {
+        encruzilhadas.push(this.copiaArraySimples(posicaoAtual));
         matriz[posicaoAtual[0]][posicaoAtual[1]] = 4;
         let indiceSorteado = this.randomInteiro(
           0,
@@ -139,8 +140,13 @@ module.exports = {
       }
     } while (continua);
 
+    console.log(encruzilhadas);
     this.printLab(matriz);
-    return genotipo;
+    let obj = {
+      genotipo: genotipo,
+      encruzilhadas:encruzilhadas
+    };
+    return obj;
   },
 
   randomInteiro(min, max) {

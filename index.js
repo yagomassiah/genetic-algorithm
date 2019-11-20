@@ -107,12 +107,21 @@ app.get("/geneticalgorithm/", async (req, res) => {
 app.get("/teste", async (req, res) => {
   var populacao = [];
   for (let i = 0; i < 4; i++) {
-    let vetorPosicoes = helpers.geradorDeIndividuo(matrizLab, [0, 0]);
-    let novoIndividuo = new individuoLabirinto(vetorPosicoes);
+    let vetorPosicoes = helpers.geradorDeIndividuo(matrizLab, [0, 0]).genotipo;
+    let encruzilhadas = helpers.geradorDeIndividuo(matrizLab,[0,0]).encruzilhadas;
+    let novoIndividuo = new individuoLabirinto(vetorPosicoes,encruzilhadas, matrizLab);
+    novoIndividuo.calculaFenotipo();
     novoIndividuo.fitnessCalc();
     populacao.push(novoIndividuo);
   }
 
+  populacao.sort(function(a, b) {
+    return a.fitness - b.fitness;
+  });
+  // populacao[0].calculaFenotipo();
+  // console.log("lendo da propriedade: ");
+  //  helpers.printLab(populacao[0].fenotipo);
+  //  populacao[0].calculaVitoria();
   let response = populacao;
   res.send(response);
 });
