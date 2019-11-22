@@ -7,6 +7,7 @@ const { generalIndividual } = require("./services/generalIndividual");
 const { individuoLabirinto } = require("./services/individuoLabirinto");
 const { sqrt } = require("mathjs");
 const geneticMethods = require("./services/methods");
+const geneticLabMethods = require("./services/metodosLabirinto");
 const multiGeneticMethods = require("./services/methodosMulti");
 const helpers = require("./helpers/helpers");
 const bits = 16;
@@ -106,22 +107,48 @@ app.get("/geneticalgorithm/", async (req, res) => {
 
 app.get("/teste", async (req, res) => {
   var populacao = [];
-  for (let i = 0; i < 4; i++) {
+  for (let i = 0; i < 8; i++) {
     let vetorPosicoes = helpers.geradorDeIndividuo(matrizLab, [0, 0]).genotipo;
-    let encruzilhadas = helpers.geradorDeIndividuo(matrizLab,[0,0]).encruzilhadas;
-    let novoIndividuo = new individuoLabirinto(vetorPosicoes,encruzilhadas, matrizLab);
+    let encruzilhadas = helpers.geradorDeIndividuo(matrizLab, [0, 0])
+      .encruzilhadas;
+    let novoIndividuo = new individuoLabirinto(
+      vetorPosicoes,
+      encruzilhadas,
+      matrizLab
+    );
     novoIndividuo.calculaFenotipo();
     novoIndividuo.fitnessCalc();
     populacao.push(novoIndividuo);
   }
+  let populacaoInicial = [];
+
+  populacao.forEach(element => {
+    populacaoInicial.push(helpers.cloneLab(element));
+  });
+ 
 
   populacao.sort(function(a, b) {
     return a.fitness - b.fitness;
   });
-  // populacao[0].calculaFenotipo();
-  // console.log("lendo da propriedade: ");
-  //  helpers.printLab(populacao[0].fenotipo);
-  //  populacao[0].calculaVitoria();
+
+  for (var i = 0; i < 1000; i++) {
+    
+    populacao.sort(function(a, b) {
+      return a.fitness - b.fitness;
+    });
+    let elite = populacao[populacao.length - 1];
+
+    let selecionados = geneticLabMethods.torneio(populacao, 4, 2);
+
+    var par;
+    selecionados = [];
+    pares.forEach(element => {
+      par = geneticMethods.crossover2(element, 0.8);
+      selecionados.push(par[0]);
+      selecionados.push(par[1]);
+    });
+
+  }
   let response = populacao;
   res.send(response);
 });

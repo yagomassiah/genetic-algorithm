@@ -1,5 +1,6 @@
 const { Individuo } = require("../services/individuo");
 const { generalIndividual } = require("../services/generalIndividual");
+const { individuoLabirinto } = require("../services/individuoLabirinto");
 const matrizLab = [
   [0, 0, 1, 1],
   [1, 0, 1, 0],
@@ -30,6 +31,13 @@ module.exports = {
   },
   clone2(indivi) {
     var copy = new generalIndividual(indivi.fenotipo);
+    //    copy.calculaGenotipo(dataset);
+    copy.calculaGenotipo();
+    //  copy.fitnessCalc();
+    return copy;
+  },
+  cloneLab(indivi) {
+    var copy = new individuoLabirinto(indivi.genotipo, indivi.encruzilhadas, indivi.labirinto);
     //    copy.calculaGenotipo(dataset);
     copy.calculaGenotipo();
     //  copy.fitnessCalc();
