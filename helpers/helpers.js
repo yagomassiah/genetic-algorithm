@@ -32,12 +32,12 @@ module.exports = {
   clone2(indivi) {
     var copy = new generalIndividual(indivi.fenotipo);
     //    copy.calculaGenotipo(dataset);
-    copy.calculaGenotipo();
+    copy.calculaFenotipo();
     //  copy.fitnessCalc();
     return copy;
   },
   cloneLab(indivi) {
-    var copy = new individuoLabirinto(indivi.genotipo, indivi.encruzilhadas, indivi.labirinto);
+    var copy = new individuoLabirinto(this.copiaArrayDuplo(indivi.genotipo), this.copiaArrayDuplo(indivi.encruzilhadas), this.copiaArrayDuplo(indivi.labirinto));
     //    copy.calculaGenotipo(dataset);
     copy.calculaGenotipo();
     //  copy.fitnessCalc();
@@ -97,13 +97,14 @@ module.exports = {
     let continua = true;
     let matriz = this.copiaArrayDuplo(matrizOrigem);
     let posicaoAtual = this.copiaArraySimples(posicao);
-    let fim = [];
+   // let fim = [];
     let genotipo = [];
-    let posicaoFinal = [6, 4];
-    let encruzilhadas= [];
+   // let posicaoFinal = [6, 4];
+   let posicaoFinal = this.encontraPosicaoVitoriosa(matriz); 
+   let encruzilhadas= [];
     genotipo.push(posicaoAtual);
     matriz[posicaoAtual[0]][posicaoAtual[1]] = 5;
-    // this.printLab(matriz);
+    
     let celulasDisponiveis = this.checaVizinhanca(posicaoAtual, matriz);
     do {
       if (celulasDisponiveis.length == 1) {
@@ -148,19 +149,51 @@ module.exports = {
       }
     } while (continua);
 
-    console.log(encruzilhadas);
-    this.printLab(matriz);
+    
     let obj = {
       genotipo: genotipo,
       encruzilhadas:encruzilhadas
     };
+   // this.printLab(matriz);
     return obj;
   },
 
   randomInteiro(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   },
-  preenche(posicao, matriz) {},
+  /* preencheFenotipo(genotipo, matriz) {
+    let nGenotipo = this.copiaArrayDuplo(genotipo);
+    let nMatriz = this.copiaArrayDuplo(matriz);
+    for (let i = 0; i < genotipo.length; i++) {
+      const element = genotipo[i];
+      nMatriz[element[0]][element[1]] = 1;
+      
+    }
+  }, */
+  encontraPosicaoVitoriosa(matriz){
+    let posicaoVencedora;
+    for (let i = 0; i < matriz.length; i++) {
+      for (let j = 0; j < matriz[0].length; j++) {
+        if (matriz[i][j] == 3) {
+          posicaoVencedora = [i, j];
+        }
+      }
+    }
+
+    return posicaoVencedora;
+  },
+  encontraPosicaoInicial(matriz){
+    let posicaoInicial;
+    for (let i = 0; i < matriz.length; i++) {
+      for (let j = 0; j < matriz[0].length; j++) {
+        if (matriz[i][j] == 2) {
+          posicaoInicial = [i, j];
+        }
+      }
+    }
+
+    return posicaoInicial;
+  },
   printLab(matriz) {
     console.log("-------------------------");
     for (let i = 0; i < matriz.length; i++) {

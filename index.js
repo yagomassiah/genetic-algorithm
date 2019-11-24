@@ -11,7 +11,7 @@ const geneticLabMethods = require("./services/metodosLabirinto");
 const multiGeneticMethods = require("./services/methodosMulti");
 const helpers = require("./helpers/helpers");
 const bits = 16;
-const matrizLab = [
+/* const matrizLab = [
   [0, 0, 1, 1, 0, 1, 1],
   [1, 0, 1, 1, 0, 1, 1],
   [1, 0, 0, 0, 0, 1, 1],
@@ -19,8 +19,27 @@ const matrizLab = [
   [1, 0, 1, 0, 0, 0, 0],
   [1, 0, 1, 0, 1, 1, 0],
   [1, 0, 0, 0, 3, 0, 0]
-];
+]; */
 
+const matrizLab = [
+  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+  [1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
+  [1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1],
+  [1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1],
+  [1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1],
+  [1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1],
+  [1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1],
+  [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1],
+  [1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1],
+  [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1],
+  [1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1],
+  [1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1],
+  [1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1],
+  [1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 3, 1, 0, 0, 0, 1],
+  [1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1],
+  [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+];
 app.use(express.json());
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -107,48 +126,60 @@ app.get("/geneticalgorithm/", async (req, res) => {
 
 app.get("/teste", async (req, res) => {
   var populacao = [];
+  let posicaoInical = helpers.encontraPosicaoInicial(matrizLab);
   for (let i = 0; i < 8; i++) {
-    let vetorPosicoes = helpers.geradorDeIndividuo(matrizLab, [0, 0]).genotipo;
-    let encruzilhadas = helpers.geradorDeIndividuo(matrizLab, [0, 0])
-      .encruzilhadas;
+    let propriedades = helpers.geradorDeIndividuo(matrizLab, posicaoInical);
+
     let novoIndividuo = new individuoLabirinto(
-      vetorPosicoes,
-      encruzilhadas,
+      propriedades.genotipo,
+      propriedades.encruzilhadas,
       matrizLab
     );
     novoIndividuo.calculaFenotipo();
     novoIndividuo.fitnessCalc();
     populacao.push(novoIndividuo);
   }
-  let populacaoInicial = [];
-
+  var populacaoInicial = [];
   populacao.forEach(element => {
     populacaoInicial.push(helpers.cloneLab(element));
   });
- 
-
-  populacao.sort(function(a, b) {
-    return a.fitness - b.fitness;
-  });
 
   for (var i = 0; i < 1000; i++) {
-    
     populacao.sort(function(a, b) {
       return a.fitness - b.fitness;
     });
     let elite = populacao[populacao.length - 1];
 
     let selecionados = geneticLabMethods.torneio(populacao, 4, 2);
-
+    var pares = geneticLabMethods.selecionaPares(selecionados);
     var par;
     selecionados = [];
     pares.forEach(element => {
-      par = geneticMethods.crossover2(element, 0.8);
+      par = geneticLabMethods.crossover2(element, 0.8);
       selecionados.push(par[0]);
       selecionados.push(par[1]);
     });
+    console.log(pares);
 
+    let mutados = [];
+    selecionados.forEach(element => {
+      mutados.push(geneticLabMethods.mutation2(element, 0.7));
+    });
+
+    mutados = mutados.sort(function(a, b) {
+      return a.fitness - b.fitness;
+    });
+
+    if (mutados[0].fitness < elite.fitness) {
+      mutados[mutados.length - 1] = elite;
+      mutados[mutados.length - 1].calculaFenotipo();
+      mutados[mutados.length - 1].fitnessCalc();
+    }
+    console.log("elite");
+    helpers.printLab(elite.fenotipo);
+    populacao = mutados;
   }
+
   let response = populacao;
   res.send(response);
 });
