@@ -86,7 +86,7 @@ module.exports = {
   crossover2(par, chanceDeCross) {
     let sorteio = Math.random();
 
-   /*  console.log("cross individuo 0 : ");
+    /*  console.log("cross individuo 0 : ");
     helpers.printLab(par[0].fenotipo);
     console.log("cross individuo 1 : ");
     helpers.printLab(par[1].fenotipo);
@@ -149,25 +149,28 @@ module.exports = {
       );
 
       let Genotipo2 = novoGenotipo2.concat(trecho1);
-      console.log(Genotipo2);
 
       let novoIndividuo1 = new individuoLabirinto(
         Genotipo1,
         [[]],
-        par[0].labirinto
+        par[0].labirinto,
+        par[0].posicaoVitoriosa
       );
 
       let novoIndividuo2 = new individuoLabirinto(
         Genotipo2,
         [[]],
-        par[0].labirinto
+        par[0].labirinto,
+        par[0].posicaoVitoriosa
       );
       novoIndividuo1.calculaFenotipo();
       novoIndividuo2.calculaFenotipo();
       novoIndividuo1.calculaEncruzilhadas();
-      novoIndividuo2.calculaEncruzilhadas();
+      novoIndividuo1.calculaEncruzilhadas();
+      novoIndividuo1.fitnessCalc();
+      novoIndividuo2.fitnessCalc();
 
-    /*   console.log("cross resultado 1: ");
+      /*   console.log("cross resultado 1: ");
       helpers.printLab(novoIndividuo1.fenotipo);
       console.log("cross resultado 2 : ");
       helpers.printLab(novoIndividuo2.fenotipo); */
@@ -215,13 +218,19 @@ module.exports = {
     return individuoMutado;
   },
   mutation2(individuo, rateOfMutation) {
-      let sorteio = Math.random();
-   // let sorteio = 0.7;
+    let sorteio = Math.random();
+    // let sorteio = 0.7;
+    individuo.calculaEncruzilhadas();
     let newGenotipo = helpers.copiaArrayDuplo(individuo.genotipo);
     let encruzilhadas = helpers.copiaArrayDuplo(individuo.encruzilhadas);
 
     if (sorteio >= rateOfMutation) {
-      let indice = Math.floor(Math.random() * encruzilhadas.length);
+      let indice;
+     /*  if (sorteio >= 0.6) {
+        indice = individuo.encruzilhadas.length - 1;
+      } else { */
+         indice = Math.floor(Math.random() * encruzilhadas.length);
+    //  }
       let encruzilhadaSelecionada = encruzilhadas[indice];
       let indiceNoGenotipo;
       for (let i = 0; i < newGenotipo.length; i++) {
@@ -234,42 +243,36 @@ module.exports = {
           break;
         }
       }
-      newGenotipo = newGenotipo.slice(0, indiceNoGenotipo +1);
-      let newIndividuo = new individuoLabirinto(newGenotipo, [[]], individuo.labirinto);
+      newGenotipo = newGenotipo.slice(0, indiceNoGenotipo + 1);
+      let newIndividuo = new individuoLabirinto(
+        newGenotipo,
+        [[]],
+        individuo.labirinto,
+        individuo.posicaoVitoriosa
+      );
+
       newIndividuo.calculaFenotipo();
-      let newCaminho = helpers.geradorDeIndividuo(newIndividuo.fenotipo, encruzilhadaSelecionada).genotipo;
+
+      let newCaminho = helpers.geradorDeIndividuo(
+        newIndividuo.fenotipo,
+        encruzilhadaSelecionada
+      ).genotipo;
       newCaminho.shift();
-      newGenotipo =newGenotipo.concat(newCaminho);
-      let finalIndividuo = new individuoLabirinto(newGenotipo, [[]], individuo.labirinto);
+      newGenotipo = newGenotipo.concat(newCaminho);
+      let finalIndividuo = new individuoLabirinto(
+        newGenotipo,
+        [[]],
+        individuo.labirinto,
+        individuo.posicaoVitoriosa
+      );
       finalIndividuo.calculaFenotipo();
       finalIndividuo.calculaEncruzilhadas();
       finalIndividuo.fitnessCalc();
-      console.log(newGenotipo);
+
       return finalIndividuo;
-    }else {
+    } else {
       return individuo;
     }
-
-    //  var newGenotipo = individuo.genotipo;
-    for (let i = 0; i < encruzilhadas.length; i++) {
-      sorteio = Math.random();
-      if (sorteio > rateOfMutation) {
-        for (let j = 0; j < newGenotipo.length; j++) {
-          const element = newGenotipo[j];
-        }
-        /* 
-        if (newGenotipo[i] == 1) {
-          newGenotipo[i] = 0;
-        } else if (newGenotipo[i] == 0) {
-          newGenotipo[i] = 1;
-        } */
-      }
-    }
-    var fenotipo = helpers.calculaFenotipo(individuo.nBits, newGenotipo);
-    var individuoMutado = new generalIndividual(fenotipo);
-    individuoMutado.calculaGenotipo();
-
-    return individuoMutado;
   },
 
   copiaIndividuo(individuo) {
@@ -277,7 +280,8 @@ module.exports = {
       helpers.copiaArrayDuplo(
         individuo.genotipo,
         individuo.encruzilhadas,
-        individuo.labirinto
+        individuo.labirinto,
+        individuo.posicaoVitoriosa
       )
     );
     newIndividuo.calculaFenotipo();

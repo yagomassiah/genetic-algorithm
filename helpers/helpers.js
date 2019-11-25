@@ -37,7 +37,7 @@ module.exports = {
     return copy;
   },
   cloneLab(indivi) {
-    var copy = new individuoLabirinto(this.copiaArrayDuplo(indivi.genotipo), this.copiaArrayDuplo(indivi.encruzilhadas), this.copiaArrayDuplo(indivi.labirinto));
+    var copy = new individuoLabirinto(this.copiaArrayDuplo(indivi.genotipo), this.copiaArrayDuplo(indivi.encruzilhadas), this.copiaArrayDuplo(indivi.labirinto), indivi.posicaoVitoriosa);
     //    copy.calculaGenotipo(dataset);
     copy.calculaGenotipo();
     //  copy.fitnessCalc();
@@ -90,8 +90,7 @@ module.exports = {
           celulasDisponiveis.push([i, j]);
       }
     }
-    /*   console.log(celulasDisponiveis);
-    console.log(matrizLab); */
+  
   },
   geradorDeIndividuo(matrizOrigem, posicao) {
     let continua = true;
@@ -144,7 +143,7 @@ module.exports = {
           continua = false;
         }
       } else if (celulasDisponiveis.length == 0) {
-        console.log("wut");
+     
         continua = false;
       }
     } while (continua);
@@ -225,7 +224,8 @@ module.exports = {
         if (matriz[linha - 1][coluna] == 3) {
           saida.push([linha - 1, coluna]);
         }
-        console.log("Acima disponivel");
+      
+        
         disponiveis.push([linha - 1, coluna]);
       }
     }
@@ -234,7 +234,7 @@ module.exports = {
         if (matriz[linha + 1][coluna] == 3) {
           saida.push([linha + 1, coluna]);
         }
-        console.log("Abaixo disponivel");
+      
         disponiveis.push([linha + 1, coluna]);
       }
     }
@@ -243,7 +243,7 @@ module.exports = {
         if (matriz[linha][coluna - 1] == 3) {
           saida.push([linha, coluna - 1]);
         }
-        console.log("Esquerda disponivel");
+       
         disponiveis.push([linha, coluna - 1]);
       }
     }
@@ -253,7 +253,7 @@ module.exports = {
         if (matriz[linha][coluna + 1] == 3) {
           saida.push([linha, coluna + 1]);
         }
-        console.log("Direita disponivel");
+     
         disponiveis.push([linha, coluna + 1]);
       }
     }
