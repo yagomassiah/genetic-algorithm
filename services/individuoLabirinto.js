@@ -1,4 +1,4 @@
-5;
+
 class individuoLabirinto {
   constructor(vetorPosicoes, encruzilhadas, matriz, posicaoVitoriosa) {
     this.fenotipo = this.copiaArrayDuplo(matriz);
@@ -8,7 +8,7 @@ class individuoLabirinto {
     this.posicaoVitoriosa = this.copiaArraySimples(posicaoVitoriosa);
     this.finaliza = false;
     this.fitness = 0;
-    this.nBits = 7;
+    
   }
 
   calculaGenotipo() {
@@ -51,13 +51,7 @@ class individuoLabirinto {
       this.fitness = this.labirinto.length * this.labirinto[0].length;
       this.fitness = this.fitness - this.genotipo.length;
     } else {
-   /*    let x1 = this.genotipo[this.genotipo.length - 1][0];
-      let y1 = this.genotipo[this.genotipo.length - 1][1];
-      let distancia = Math.abs(
-        x1 - this.posicaoVitoriosa[0] + (y1 - this.posicaoVitoriosa[1])
-      );
-
-      this.fitness = 1/ distancia; */
+  
       this.fitness = this.genotipo.length;
     }
   }
