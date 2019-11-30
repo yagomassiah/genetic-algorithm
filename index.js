@@ -198,7 +198,7 @@ app.get("/geneticalgorithm/", async (req, res) => {
 });
 
 app.post("/labirinto-genetico", async (req, res) => {
-  //let matrizLab = req.body.labirinto;
+
   let matrizLab;
   switch (req.body.labirinto) {
     case 1:
@@ -238,7 +238,7 @@ app.post("/labirinto-genetico", async (req, res) => {
     );
     novoIndividuo.calculaFenotipo();
     novoIndividuo.fitnessCalc();
-   // helpers.printLab(novoIndividuo.fenotipo);
+ 
     populacao.push(novoIndividuo);
   }
   var populacaoInicial = [];
@@ -272,9 +272,7 @@ app.post("/labirinto-genetico", async (req, res) => {
       return a.fitness - b.fitness;
     });
 
-    /* mutados.forEach(element => {
-      
-    }); */
+
 
     if (mutados[0].fitness < elite.fitness) {
       mutados[0] = elite;
@@ -284,25 +282,12 @@ app.post("/labirinto-genetico", async (req, res) => {
     }
 
     p++;
-    /* if(p > 200){
-      mutados.forEach(element => {
-        console.clear();
-        if(element.fitness == 0){
-        console.log(element.fitness);
-        helpers.printLab(element.fenotipo);
-        element.fitnessCalc();
-        console.log(element.fitness);
-        }
-        console.log(element.fitness);
-      });
-    }
- */
-
+  
     if (p > 200) {
       p = 0;
       console.clear();
       console.log("Geração: " + i);
-      //helpers.printLab(elite.fenotipo);
+      helpers.printLab(elite.fenotipo);
       analiseDefitness.push(elite.fitness);
       geracao.push(i);
       analiseDefitnessDoMeio.push(mutados[50].fitness);
@@ -316,15 +301,9 @@ app.post("/labirinto-genetico", async (req, res) => {
       media = media / mutados.length;
 
       analiseFitnessMedio.push(media);
-      /*  mutados.forEach(element => {
-        console.log(element.fitness)
-      }); */
+    
     }
-    // helpers.printLab(elite.fenotipo);
-    /*    populacao.forEach(element => {
-      console.clear();
-      helpers.printLab(element.fenotipo);
-    }); */
+   
     populacao = mutados;
   }
   /*   helpers.printLab(populacao[0].fenotipo); */
@@ -339,79 +318,6 @@ app.post("/labirinto-genetico", async (req, res) => {
   res.send(response);
 });
 
-app.get("/galabirinto/", async (req, res) => {
-  //var ret = await test.funcAnotherTest();
-  var populacao = [];
-  var arrr = Array.from({ length: 4 }, () => Math.floor(Math.random() * 31));
-
-  arrr.forEach(async element => {
-    populacao.push(new generalIndividual(Math.floor(Math.random() * 31)));
-  });
-
-  populacao.forEach(async element => {
-    if (element.fenotipo > 31) console.log("wtf");
-    element.fitnessCalc();
-    element.calculaGenotipo();
-  });
-
-  var populacaoInicial = [];
-
-  populacao.sort(function(a, b) {
-    return a.fitness - b.fitness;
-  });
-  populacao.forEach(element => {
-    populacaoInicial.push(helpers.clone2(element));
-  });
-
-  // -------------------------------------------------------
-
-  populacao = populacao.sort(function(a, b) {
-    return a.fitness - b.fitness;
-  });
-
-  for (var i = 0; i < 1000; i++) {
-    populacao = populacao.sort(function(a, b) {
-      return a.fitness - b.fitness;
-    });
-    var elite = populacao[populacao.length - 1];
-
-    var selecionados = geneticMethods.torneio(populacao, 4, 2);
-    var pares = geneticMethods.selecionaPares(selecionados);
-
-    var par;
-    selecionados = [];
-    pares.forEach(element => {
-      par = geneticMethods.crossover2(element, 0.8);
-      selecionados.push(par[0]);
-      selecionados.push(par[1]);
-    });
-    var mutados = [];
-    selecionados.forEach(element => {
-      mutados.push(geneticMethods.mutation2(element, 0.7));
-    });
-
-    mutados.forEach(element => {
-      element.fitnessCalc();
-    });
-
-    mutados = mutados.sort(function(a, b) {
-      return a.fitness - b.fitness;
-    });
-
-    if (mutados[0].fitness < elite.fitness) {
-      mutados[mutados.length - 1] = elite;
-      mutados[mutados.length - 1].calculaGenotipo();
-      mutados[mutados.length - 1].fitnessCalc();
-    }
-
-    populacao = mutados;
-  }
-  var ret = {
-    inicio: populacaoInicial,
-    resultados: populacao
-  };
-  res.send(ret);
-});
 
 app.post("/algoritmogenetico/", async (req, res) => {
   //var ret = await test.funcAnotherTest();
